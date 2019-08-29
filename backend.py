@@ -3,11 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from sqlalchemy import exc
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
