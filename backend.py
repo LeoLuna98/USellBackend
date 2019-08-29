@@ -82,9 +82,9 @@ def register():
             db.session.commit()
             return jsonify({'message' : 'Usuario registrado satisfactoriamente.'})
         except exc.IntegrityError as e:
-            return jsonify({'message' : 'Usuario ya registrado.'}) 
+            return jsonify({'error' : 'Usuario ya registrado.'}) 
         except Exception as e:
-            return jsonify({'message' : f'Error al regisrar usuario. {e}'})
+            return jsonify({'error' : f'Error al regisrar usuario. {e}'})
 
 
 
