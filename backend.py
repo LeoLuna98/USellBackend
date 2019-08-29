@@ -24,7 +24,7 @@ class Student(db.Model):
 
 class Career(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    career_name = db.Column(db.String(20), unique=True, nullable=False)
+    career_name = db.Column(db.String(50), unique=True, nullable=False)
 
 class StudentSchema(ma.ModelSchema):
     class Meta:
