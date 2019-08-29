@@ -72,7 +72,10 @@ def register():
             level = request.json['level']
             phone_number = request.json['phone_number']
             career_name = request.json['career_name']
-            profile_image_url = request.json['profile_image_url']
+            if 'profile_image_url' not in request.get_json():
+                profile_image_url = None
+            else:
+                profile_image_url = request.json['profile_image_url']
             career = Career.query.filter_by(career_name=career_name).first()
             student = Student(id=id,email=email,name=name,level=level,phone_number=phone_number,career=career)
             db.session.add(student)
