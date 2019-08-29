@@ -66,7 +66,7 @@ def register():
         return jsonify({'message' : 'Carrera no encontrada.'}) 
     else:
         try:
-            id = request.json['stutend_id']
+            id = request.json['studend_id']
             email = request.json['email']
             name = request.json['name']
             level = request.json['level']
