@@ -80,11 +80,11 @@ def register():
             student = Student(id=id,email=email,name=name,level=level,phone_number=phone_number,career=career)
             db.session.add(student)
             db.session.commit()
-            return jsonify([{'message' : 'Usuario registrado satisfactoriamente.'}])
+            return jsonify({'message' : 'Usuario registrado satisfactoriamente.'})
         except exc.IntegrityError as e:
             return jsonify({'message' : 'Usuario ya registrado.'}) 
         except Exception as e:
-            return jsonify([{'message' : f'Error al regisrar usuario. {e}'}])
+            return jsonify({'message' : f'Error al regisrar usuario. {e}'})
 
 
 
