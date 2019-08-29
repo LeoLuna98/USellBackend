@@ -19,6 +19,7 @@ class Student(db.Model):
     name = db.Column(db.String(50), nullable=False)
     level = db.Column(db.Integer, nullable=False)
     phone_number = db.Column(db.String(9), nullable=False)
+    profile_image_url = db.Column(db.String(50))
     career_id = db.Column(db.Integer, db.ForeignKey('career.id'), nullable=False)
     career = db.relationship('Career', backref='student')
 
