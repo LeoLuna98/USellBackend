@@ -56,7 +56,7 @@ def get_all_careers():
     if all_careers == None:
         return jsonify({'error' : 'No hay carreras registradas.'})
     else:
-        return jsonify({'message' : 'Se encontraron carreras.'}, {'student' : careers_schema.dump(all_careers)})
+        return jsonify({'message' : 'Se encontraron carreras.'}, {'career' : careers_schema.dump(all_careers)})
 
 @app.route('/all_students')
 def get_all_students():
@@ -64,7 +64,7 @@ def get_all_students():
     if all_students == None:
         return jsonify({'error' : 'No hay estudiantes registrados.'})
     else:
-        return jsonify({'message' : 'Se encontraron alumnos.'}, {'career' : students_schema.dump(all_students)})
+        return jsonify({'message' : 'Se encontraron alumnos.'}, {'student' : students_schema.dump(all_students)})
 
 @app.route('/register', methods=['POST'])
 def register():
