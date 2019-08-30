@@ -56,7 +56,7 @@ def get_all_careers():
     if all_careers == None:
         return jsonify({'error' : 'No hay carreras registradas.'})
     else:
-        return jsonify({'message' : 'Se encontraron carreras.'}, {'career' : careers_schema.dump(all_careers)})
+        return jsonify({'message' : 'Se encontraron carreras.'}, {'student' : careers_schema.dump(all_careers)})
 
 @app.route('/all_students')
 def get_all_students():
