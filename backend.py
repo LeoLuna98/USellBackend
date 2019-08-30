@@ -39,12 +39,13 @@ class CarrerSchema(ma.ModelSchema):
 student_schema = StudentSchema()
 career_schema = CarrerSchema()
 careers_schema = CarrerSchema(many=True)
+students_schema = StudentSchema(many=True)
 
-@app.route('/user/<id>')
-def get_user(id):
+@app.route('/student/<id>')
+def get_student(id):
     student = Student.query.filter_by(id=id).first()
     if student == None:
-        return jsonify({'message' : 'Usuario no encontrado.'})
+        return jsonify({'error' : 'Usuario no encontrado.'})
     else:
         return jsonify({'message' : 'Usuario encontrado.'}, {'student' : student_schema.dump(student)})
 
@@ -53,9 +54,17 @@ def get_user(id):
 def get_all_careers():
     all_careers = Career.query.all()
     if all_careers == None:
-        return jsonify({'message' : 'No hay carreras registradas.'})
+        return jsonify({'error' : 'No hay carreras registradas.'})
     else:
         return jsonify({'message' : 'Se encontraron carreras.'}, {'career' : careers_schema.dump(all_careers)})
+
+@app.route('/all_students')
+def get_all_students():
+    all_students = Student.query.all()
+    if all_students == None:
+        return jsonify({'error' : 'No hay estudiantes registrados.'})
+    else:
+        return jsonify({'message' : 'Se encontraron alumnos.'}, {'career' : students_schema.dump(all_students)})
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -63,7 +72,7 @@ def register():
     career = Career.query.filter_by(career_name=career_name).first()
 
     if career == None:
-        return jsonify({'message' : 'Carrera no encontrada.'}) 
+        return jsonify({'error' : 'Carrera no encontrada.'}) 
     else:
         try:
             id = request.json['studend_id']
