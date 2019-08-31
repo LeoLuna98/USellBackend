@@ -64,7 +64,7 @@ def get_all_students():
     if all_students == None:
         return jsonify({'error' : 'No hay estudiantes registrados.'})
     else:
-        return jsonify({'message' : 'Se encontraron alumnos.'}, {'student' : students_schema.dump(all_students)})
+        return jsonify({'student' : students_schema.dump(all_students)})
 
 @app.route('/register', methods=['POST'])
 def register():
