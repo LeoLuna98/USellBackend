@@ -41,6 +41,11 @@ career_schema = CarrerSchema()
 careers_schema = CarrerSchema(many=True)
 students_schema = StudentSchema(many=True)
 
+@app.route('/')
+def index() {
+    return jsonify({'message' : 'app running'})
+}
+
 @app.route('/student/<id>')
 def get_student(id):
     student = Student.query.filter_by(id=id).first()
