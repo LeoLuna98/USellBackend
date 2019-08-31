@@ -42,9 +42,8 @@ careers_schema = CarrerSchema(many=True)
 students_schema = StudentSchema(many=True)
 
 @app.route('/')
-def index() {
+def index():
     return jsonify({'message' : 'app running'})
-}
 
 @app.route('/student/<id>')
 def get_student(id):
