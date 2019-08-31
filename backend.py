@@ -90,7 +90,7 @@ def register():
             else:
                 profile_image_url = request.json['profile_image_url']
             career = Career.query.filter_by(career_name=career_name).first()
-            student = Student(id=id,email=email,name=name,level=level,phone_number=phone_number,career=career)
+            student = Student(id=id,email=email,name=name,level=level,phone_number=phone_number,career=career, profile_image_url=profile_image_url)
             db.session.add(student)
             db.session.commit()
             return jsonify({'message' : 'Usuario registrado satisfactoriamente.'})
