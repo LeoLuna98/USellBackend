@@ -113,6 +113,8 @@ def create_careers():
     car10 = Career(career_name='Ingeniería Industrial')
     car11 = Career(career_name='Ingeniería de Sistemas')
     car12 = Career(career_name='Psicología') 
+    db.session.add_all([car1,car2,car3,car4,car5,car6,car7,car8,car9,car10,car11,car12])
+    db.session.commit()
 
 
 
