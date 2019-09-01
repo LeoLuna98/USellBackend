@@ -19,7 +19,7 @@ class Student(db.Model):
     name = db.Column(db.String(50), nullable=False)
     level = db.Column(db.Integer, nullable=False)
     phone_number = db.Column(db.String(9), nullable=False)
-    profile_image_url = db.Column(db.String(50))
+    profile_image_url = db.Column(db.String(500))
     career_id = db.Column(db.Integer, db.ForeignKey('career.id'), nullable=False)
     career = db.relationship('Career', backref='student')
 
@@ -98,6 +98,21 @@ def register():
             return jsonify({'error' : 'Usuario ya registrado.'}) 
         except Exception as e:
             return jsonify({'error' : f'Error al regisrar usuario. {e}'})
+
+@app.route('create_carrers')
+def create_careers():
+    car1 = Career(career_name='Administración')
+    car2 = Career(career_name='Contabilidad')
+    car3 = Career(career_name='Economía')
+    car4 = Career(career_name='Marketing')
+    car5 = Career(career_name='Negocios Internacionales')
+    car6 = Career(career_name='Comunicación')
+    car7 = Career(career_name='Derecho')
+    car8 = Career(career_name='Arquitectura')
+    car9 = Career(career_name='Ingeniería Civil')
+    car10 = Career(career_name='Ingeniería Industrial')
+    car11 = Career(career_name='Ingeniería de Sistemas')
+    car12 = Career(career_name='Psicología') 
 
 
 
