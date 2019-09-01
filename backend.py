@@ -99,7 +99,7 @@ def register():
         except Exception as e:
             return jsonify({'error' : f'Error al regisrar usuario. {e}'})
 
-@app.route('create_carrers')
+@app.route('/create_carrers')
 def create_careers():
     car1 = Career(career_name='Administración')
     car2 = Career(career_name='Contabilidad')
