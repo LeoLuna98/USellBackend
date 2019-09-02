@@ -53,6 +53,16 @@ def get_student(id):
     else:
         return jsonify({'message' : 'Usuario encontrado.'}, {'student' : student_schema.dump(student)})
 
+@app.route('/delete_student/<id>')
+def delte_student(id):
+    student = Student.query.filter_by(id=id).first()
+    if student == None:
+        return jsonify({'error' : 'Usuario no encontrado.'})
+    else:
+        db.session.delete(student)
+        db.session.commit()
+        return jsonify({'message' : 'Usuario eliminado con éxito.'})
+
 
 @app.route('/all_careers')
 def get_all_careers():
@@ -79,7 +89,7 @@ def register():
         return jsonify({'error' : 'Carrera no encontrada.'}) 
     else:
         try:
-            id = request.json['studend_id']
+            id = request.json['id']
             email = request.json['email']
             name = request.json['name']
             level = request.json['level']
