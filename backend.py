@@ -172,6 +172,14 @@ def get_all_students():
     else:
         return jsonify({'student' : students_schema.dump(all_students)})
 
+@app.route('/all_posts')
+def get_all_posts():
+    all_posts = Post.query.all()
+    if all_posts == None:
+        return jsonify({'error' : 'No hay publicaciones registrados.'})
+    else:
+        return jsonify({'student' : posts_schema.dump(all_posts)})
+
 @app.route('/register', methods=['POST'])
 def register():
     career_name = request.json['career_name']
