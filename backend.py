@@ -211,6 +211,15 @@ def create_careers():
     db.session.commit()
     return jsonify({'message' : 'carreras creadas'})
 
+@app.route('/crate_categories')
+def crate_categories():
+    cat1 = Category(name='Libros',description='En esta categoría podrás encontrar diversos libros.',image_url='https://firebasestorage.googleapis.com/v0/b/u-sell-app.appspot.com/o/categoryImages%2FLibros.png?alt=media&token=7674f1bf-a685-45f5-b5a4-53bb021b7c45')
+    cat2 = Category(name='Útiles',description='En esta categoría podrás encontrar útiles para tus estudios.',image_url='https://firebasestorage.googleapis.com/v0/b/u-sell-app.appspot.com/o/categoryImages%2FUtiles.png?alt=media&token=613eb19b-c331-4a8c-ad8f-3d9846dcecca')
+    cat3 = Category(name='Ropa',description='En esta categoría podrás ropa, como batas.',image_url='https://firebasestorage.googleapis.com/v0/b/u-sell-app.appspot.com/o/categoryImages%2FRopa.png?alt=media&token=6bbe08da-961c-4583-b383-614010156c15')
+    db.session.add_all([cat1,cat2,cat3])
+    db.session.commit()
+    return jsonify({'message' : 'categorias creadas'})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
