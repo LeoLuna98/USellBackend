@@ -178,7 +178,7 @@ def get_all_posts():
     if all_posts == None:
         return jsonify({'error' : 'No hay publicaciones registrados.'})
     else:
-        return jsonify({'student' : posts_schema.dump(all_posts)})
+        return jsonify({'posts' : posts_schema.dump(all_posts)})
 
 @app.route('/register', methods=['POST'])
 def register():
