@@ -37,6 +37,12 @@ class Category(db.Model):
     description = db.Column(db.String(200), nullable=False)
     image_url = db.Column(db.String(500), nullable=False)
 
+# Mid relation
+careers = db.Table('careers',
+    db.Column('career_id', db.Integer, db.ForeignKey('career.id'), primary_key=True),
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id'), primary_key=True)
+)
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
@@ -46,8 +52,16 @@ class Post(db.Model):
     status = db.Column(db.String(50), nullable=False)
     level = db.Column(db.Integer, nullable=False)
     publish_date = db.Column(db.DateTime, default=datetime.now())
+
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     category = db.relationship('Category', backref='post')
+    
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    student = db.relationship('Student', backref='post')
+
+    careers = db.relationship('Career', secondary=careers, backref='post')
+    # career_id = db.Column(db.Integer, db.ForeignKey('career.id'), nullable=False)
+    # career = db.relationship('Carrer', backref='post')
 
 class WishPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
