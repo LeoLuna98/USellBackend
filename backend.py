@@ -13,6 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
+# SQLAlchemy Models
+
 class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
@@ -20,12 +22,53 @@ class Student(db.Model):
     level = db.Column(db.Integer, nullable=False)
     phone_number = db.Column(db.String(9), nullable=False)
     profile_image_url = db.Column(db.String(500))
+    seller_rating = db.Column(db.Float, default=0.0)
+    purchaser_rating = db.Column(db.Float, default=0.0)
     career_id = db.Column(db.Integer, db.ForeignKey('career.id'), nullable=False)
     career = db.relationship('Career', backref='student')
 
 class Career(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     career_name = db.Column(db.String(50), unique=True, nullable=False)
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(200), nullable=False)
+    image_url = db.Column(db.String(500), nullable=False)
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    description = db.Column(db.String(500), nullable=False)
+    image_url = db.Column(db.String(500), nullable=False)
+    status = db.Column(db.String(50), nullable=False)
+    level = db.Column(db.Integer, nullable=False)
+    publish_date = db.Column(db.DateTime, default=datetime.now())
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    category = db.relationship('Category', backref='post')
+
+class WishPost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    added_date = db.Column(db.DateTime, default=datetime.now())
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    post = db.relationship('Post', backref='wishPost')
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    student = db.relationship('Student', backref='wishPost')
+
+class Transaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, default=datetime.now())
+    general_status = db.Column(db.String(20), nullable=False)
+    seller_status = db.Column(db.String(20), nullable=False)
+    purchaser_status = db.Column(db.String(20), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    post = db.relationship('Post', backref='transaction')
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    student = db.relationship('Student', backref='transaction')
+
+# Marshmallow Models
 
 class StudentSchema(ma.ModelSchema):
     class Meta:
@@ -35,11 +78,38 @@ class CarrerSchema(ma.ModelSchema):
     class Meta:
         model = Career
 
+class CategorySchema(ma.ModelSchema):
+    class Meta:
+        model = Category
 
+class PostSchema(ma.ModelSchema):
+    class Meta:
+        model = Post
+
+class WishPostSchema(ma.ModelSchema):
+    class Meta:
+        model = WishPost
+
+class TransactionSchema(ma.ModelSchema):
+    class Meta:
+        model = Transaction
+
+# Single Schemas Instances
 student_schema = StudentSchema()
 career_schema = CarrerSchema()
+category_schema = CategorySchema()
+post_schema = PostSchema()
+wish_post_schema = WishPostSchema()
+transaction_schema = TransactionSchema()
+
+
+# Multiple Schemas Instances
 careers_schema = CarrerSchema(many=True)
 students_schema = StudentSchema(many=True)
+categories_schema = CategorySchema(many=True)
+posts_schema = PostSchema(many=True)
+wish_posts_schema = WishPostSchema(many=True)
+transactions_schema = TransactionSchema(many=True)
 
 @app.route('/')
 def index():
