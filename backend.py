@@ -84,15 +84,14 @@ class Transaction(db.Model):
 
 # Marshmallow Models
 
+class CarrerSchema(ma.ModelSchema):
+    class Meta:
+        model = Career
+
 class StudentSchema(ma.ModelSchema):
     class Meta:
         model = Student
     career = ma.Nested(CarrerSchema)
-
-class CarrerSchema(ma.ModelSchema):
-    class Meta:
-        model = Career
-    student = ma.Nested(StudentSchema)
 
 class CategorySchema(ma.ModelSchema):
     class Meta:
