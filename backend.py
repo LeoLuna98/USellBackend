@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
+from flask_marshmallow import Marshmallow, Nested
 from sqlalchemy import exc
 from datetime import datetime
 import os
@@ -91,6 +91,7 @@ class StudentSchema(ma.ModelSchema):
 class CarrerSchema(ma.ModelSchema):
     class Meta:
         model = Career
+    student = ma.Nested(StudentSchema)
 
 class CategorySchema(ma.ModelSchema):
     class Meta:
