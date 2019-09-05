@@ -87,6 +87,7 @@ class Transaction(db.Model):
 class StudentSchema(ma.ModelSchema):
     class Meta:
         model = Student
+    career = ma.Nested(CarrerSchema)
 
 class CarrerSchema(ma.ModelSchema):
     class Meta:
