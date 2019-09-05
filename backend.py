@@ -100,6 +100,7 @@ class CategorySchema(ma.ModelSchema):
 class PostSchema(ma.ModelSchema):
     class Meta:
         model = Post
+    career = ma.Nested(CarrerSchema)
 
 class WishPostSchema(ma.ModelSchema):
     class Meta:
