@@ -146,7 +146,7 @@ def get_student(id):
     if student == None:
         return jsonify({'error' : 'Usuario no encontrado.'})
     else:
-        return jsonify({'message' : 'Usuario encontrado.'}, {'student' : student_schema.dump(student)})
+        return jsonify(student_schema.dump(student))
 
 @app.route('/delete_student/<id>')
 def delte_student(id):
