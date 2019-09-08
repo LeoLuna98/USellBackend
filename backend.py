@@ -97,6 +97,7 @@ class StudentSchema(ma.ModelSchema):
     def exclude_carrer(self, data, **kwargs):
         data['career'].pop('post')
         data['career'].pop('student')
+        data.pop('post')
         data.pop('transaction')
         data.pop('wishPost')
         return data
