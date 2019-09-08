@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from marshmallow import post_dump
 from sqlalchemy import exc
 from datetime import datetime
 import os
@@ -92,6 +93,9 @@ class StudentSchema(ma.ModelSchema):
     class Meta:
         model = Student
     career = ma.Nested(CarrerSchema)
+    @post_dump
+    def exclude_carrer(self, data, **kwargs):
+        data.pop('email')
 
 class CategorySchema(ma.ModelSchema):
     class Meta:
