@@ -95,7 +95,7 @@ class StudentSchema(ma.ModelSchema):
     career = ma.Nested(CarrerSchema)
     @post_dump
     def exclude_carrer(self, data, **kwargs):
-        data.pop('email')
+        data['career'].pop('post')
         return data
 
 class CategorySchema(ma.ModelSchema):
