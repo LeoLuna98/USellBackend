@@ -96,6 +96,7 @@ class StudentSchema(ma.ModelSchema):
     @post_dump
     def exclude_carrer(self, data, **kwargs):
         data.pop('email')
+        return data
 
 class CategorySchema(ma.ModelSchema):
     class Meta:
