@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -50,7 +51,7 @@ class Post(db.Model):
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(500), nullable=False)
     image_url = db.Column(db.String(500), nullable=False)
-    status = db.Column(db.String(50), nullable=False)
+    status = db.Column(db.String(50), default='active')
     level = db.Column(db.Integer, nullable=False)
     publish_date = db.Column(db.DateTime, default=datetime.now())
 
@@ -158,7 +159,6 @@ def delte_student(id):
         db.session.commit()
         return jsonify({'message' : 'Usuario eliminado con éxito.'})
 
-
 @app.route('/all_careers')
 def get_all_careers():
     all_careers = Career.query.all()
@@ -219,6 +219,44 @@ def register():
             return jsonify({'error' : 'Usuario ya registrado.'}) 
         except Exception as e:
             return jsonify({'error' : f'Error al regisrar usuario. {e}'})
+
+@app.route('/publish', methods=['POST'])
+def publish():   
+    category_name = request.json['category_name']
+    category = Category.query.filter_by(name=category_name).first()
+    if category == None:
+        return jsonify({'error' : 'Categoría no encontrada.'}) 
+    
+    student_id = request.json['student_id']
+    student = Student.query.filter_by(id=student_id).first()
+    if student == None:
+        return jsonify({'error' : 'Estudiante no encontrado'})
+
+    career_names = request.json['career_names']
+    careers = []
+    for career_name in career_names:
+        career = Career.query.filter_by(career_name=career_name).first()
+        if career == None:
+            return jsonify({'error' : 'Carrera no encontrada.'})
+        else:
+            careers.append(career)
+
+    try:
+        name = request.json['name']
+        price = request.json['price']
+        description = request.json['description']
+        image_url = request.json['image_url']
+        level = request.json['level']
+
+        post = Post(name=name,price=price,description=description,image_url=image_url,level=level,category=category,student=student)
+        post.careers.extend(careers)
+        db.session.add(post)
+        db.session.commit()
+        return jsonify({'message' : 'Publicación registrada satisfactoriamente.'})
+    except exc.IntegrityError as e:
+        return jsonify({'error' : 'Error de integridad.'}) 
+    except Exception as e:
+        return jsonify({'error' : f'Error al realizar la publicación. {e}'})
 
 @app.route('/create_carrers')
 def create_careers():
