@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from marshmallow import post_dump
+from marshmallow_sqlalchemy import TableSchema
 from sqlalchemy import exc
 from datetime import datetime
 import os
@@ -9,8 +10,8 @@ import os
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -110,7 +111,7 @@ class CategorySchema(ma.ModelSchema):
 class PostSchema(ma.ModelSchema):
     class Meta:
         model = Post
-    career = ma.Nested(CarrerSchema)
+    careers = ma.Nested(CarrerSchema, many=True)
 
 class WishPostSchema(ma.ModelSchema):
     class Meta:
@@ -148,6 +149,15 @@ def get_student(id):
         return jsonify({'error' : 'Usuario no encontrado.'})
     else:
         return jsonify(student_schema.dump(student))
+
+@app.route('/active_posts/<student_id>')
+def get_active_posts(student_id):
+    posts = Post.query.filter_by(student_id=student_id).all()
+    return jsonify(posts_schema.dump(posts))
+    # if not posts:
+    #     return jsonify({'error': 'No se encontraron publicaciones.'})
+    # else:
+    #     return jsonify(posts_schema.dump(posts))
 
 @app.route('/delete_student/<id>')
 def delte_student(id):
