@@ -10,8 +10,8 @@ import os
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -112,6 +112,14 @@ class PostSchema(ma.ModelSchema):
     class Meta:
         model = Post
     careers = ma.Nested(CarrerSchema, many=True)
+    @post_dump
+    def exclude_fields(self, data, **kwargs):
+        for career in data['careers']:
+            career.pop('post')
+            career.pop('student')
+        data.pop('transaction')
+        data.pop('wishPost')
+        return data
 
 class WishPostSchema(ma.ModelSchema):
     class Meta:
