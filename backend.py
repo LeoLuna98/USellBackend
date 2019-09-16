@@ -87,6 +87,14 @@ class Transaction(db.Model):
 
 # Marshmallow Models
 
+class CategorySchema(ma.ModelSchema):
+    class Meta:
+        model = Category
+    @post_dump
+    def exclude_fields(self, data, **kwargs):
+        data.pop('post')
+        return data
+
 class CarrerSchema(ma.ModelSchema):
     class Meta:
         model = Career
@@ -104,19 +112,17 @@ class StudentSchema(ma.ModelSchema):
         data.pop('wishPost')
         return data
 
-class CategorySchema(ma.ModelSchema):
-    class Meta:
-        model = Category
-
 class PostSchema(ma.ModelSchema):
     class Meta:
         model = Post
     careers = ma.Nested(CarrerSchema, many=True)
+    category = ma.Nested(CategorySchema)
     @post_dump
     def exclude_fields(self, data, **kwargs):
         for career in data['careers']:
             career.pop('post')
             career.pop('student')
+        # data['category'].pop('post')
         data.pop('transaction')
         data.pop('wishPost')
         return data
