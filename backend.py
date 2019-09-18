@@ -166,7 +166,7 @@ def get_student(id):
 
 @app.route('/active_posts/<student_id>')
 def get_active_posts(student_id):
-    posts = Post.query.filter_by(student_id=student_id).all()
+    posts = Post.query.filter_by(student_id=student_id,status='active').all()
     return jsonify(posts_schema.dump(posts))
     # if not posts:
     #     return jsonify({'error': 'No se encontraron publicaciones.'})
