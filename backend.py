@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from marshmallow import post_dump
 from marshmallow_sqlalchemy import TableSchema
-from sqlalchemy import exc
+from sqlalchemy import exc, desc
 from datetime import datetime
 import os
 
@@ -168,10 +168,6 @@ def get_student(id):
 def get_active_posts(student_id):
     posts = Post.query.filter_by(student_id=student_id).all()
     return jsonify(posts_schema.dump(posts))
-    # if not posts:
-    #     return jsonify({'error': 'No se encontraron publicaciones.'})
-    # else:
-    #     return jsonify(posts_schema.dump(posts))
 
 @app.route('/delete_student/<id>')
 def delte_student(id):
@@ -214,6 +210,14 @@ def get_all_posts():
         return jsonify({'error' : 'No hay publicaciones registrados.'})
     else:
         return jsonify({'posts' : posts_schema.dump(all_posts)})
+    
+@app.route('/recent_posts/<student_id>')
+def get_recent_posts(student_id):
+    recent_posts = Post.query.filter(Post.student_id!=student_id).order_by(desc(Post.id)).limit(50)
+    if recent_posts == None:
+        return jsonify({'error' : 'No hay publicaciones registrados.'})
+    else:
+        return jsonify(posts_schema.dump(recent_posts))
 
 @app.route('/register', methods=['POST'])
 def register():
