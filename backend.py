@@ -193,7 +193,7 @@ def get_all_categories():
     if all_categories == None:
         return jsonify({'error' : 'No hay categorias registradas.'})
     else:
-        return jsonify({'categories' : categories_schema.dump(all_categories)})
+        return jsonify(categories_schema.dump(all_categories))
 
 @app.route('/all_students')
 def get_all_students():
