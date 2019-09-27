@@ -220,13 +220,13 @@ def get_all_posts():
     else:
         return jsonify({'posts' : posts_schema.dump(all_posts)})
     
-@app.route('/recent_posts/<student_id>')
-def get_recent_posts(student_id):
-    recent_posts = Post.query.filter(Post.student_id!=student_id,Post.status'active').order_by(desc(Post.id)).limit(50)
-    if recent_posts == None:
-        return jsonify({'error' : 'No hay publicaciones registrados.'})
-    else:
-        return jsonify(posts_schema.dump(recent_posts))
+# @app.route('/recent_posts/<student_id>')
+# def get_recent_posts(student_id):
+#     recent_posts = Post.query.filter(Post.student_id!=student_id,Post.status'active').order_by(desc(Post.id)).limit(50)
+#     if recent_posts == None:
+#         return jsonify({'error' : 'No hay publicaciones registrados.'})
+#     else:
+#         return jsonify(posts_schema.dump(recent_posts))
 
 @app.route('/register', methods=['POST'])
 def register():
