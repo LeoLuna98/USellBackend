@@ -203,6 +203,14 @@ def get_all_students():
     else:
         return jsonify(students_schema.dump(all_students))
 
+@app.route('/single_post/<id>')
+def get_post_by(id):
+    post = Post.query.filter_by(id=id,status='active').first()
+    if post == None:
+        return jsonify({'error' : 'La publicación a la que quieres acceder no está disponible.'})
+    else:
+        return jsonify(post_schema.dump(post))
+
 @app.route('/all_posts')
 def get_all_posts():
     all_posts = Post.query.all()
@@ -213,7 +221,7 @@ def get_all_posts():
     
 @app.route('/recent_posts/<student_id>')
 def get_recent_posts(student_id):
-    recent_posts = Post.query.filter(Post.student_id!=student_id).order_by(desc(Post.id)).limit(50)
+    recent_posts = Post.query.filter(Post.student_id!=student_id,Post.status'active').order_by(desc(Post.id)).limit(50)
     if recent_posts == None:
         return jsonify({'error' : 'No hay publicaciones registrados.'})
     else:
