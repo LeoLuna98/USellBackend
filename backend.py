@@ -303,7 +303,7 @@ def publish():
     except Exception as e:
         return jsonify({'error' : f'Error al realizar la publicación. {e}'})
 
-@app.route('/create_carrers')
+@app.route('/create_carreers')
 def create_careers():
     car1 = Career(career_name='Administración')
     car2 = Career(career_name='Contabilidad')
@@ -321,7 +321,7 @@ def create_careers():
     db.session.commit()
     return jsonify({'message' : 'carreras creadas'})
 
-@app.route('/crate_categories')
+@app.route('/create_categories')
 def crate_categories():
     cat1 = Category(name='Libros',description='En esta categoría podrás encontrar diversos libros.',image_url='https://firebasestorage.googleapis.com/v0/b/u-sell-app.appspot.com/o/categoryImages%2FLibros.png?alt=media&token=7674f1bf-a685-45f5-b5a4-53bb021b7c45')
     cat2 = Category(name='Útiles',description='En esta categoría podrás encontrar útiles para tus estudios.',image_url='https://firebasestorage.googleapis.com/v0/b/u-sell-app.appspot.com/o/categoryImages%2FUtiles.png?alt=media&token=613eb19b-c331-4a8c-ad8f-3d9846dcecca')
