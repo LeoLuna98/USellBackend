@@ -77,9 +77,9 @@ class WishPost(db.Model):
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, default=datetime.now())
-    general_status = db.Column(db.String(20), nullable=False)
-    seller_status = db.Column(db.String(20), nullable=False)
-    purchaser_status = db.Column(db.String(20), nullable=False)
+    general_status = db.Column(db.String(20), default='pending')
+    seller_status = db.Column(db.String(20), default='pending')
+    purchaser_status = db.Column(db.String(20), default='pending')
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
     post = db.relationship('Post', backref='transaction')
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
@@ -304,12 +304,22 @@ def publish():
     except Exception as e:
         return jsonify({'error' : f'Error al realizar la publicación. {e}'})
 
-# @app.route('/create_transaction', methods=['POST'])
-# def create_transaction():
-#     student_id = request.json['student_id']
-#     student = Student.query.filter_by(id=student_id).first()
-#     if student == None:
-#         return jsonify({'error' : 'Estudiante no encontrado'})
+@app.route('/create_transaction', methods=['POST'])
+def create_transaction():
+    student_id = request.json['student_id']
+    student = Student.query.filter_by(id=student_id).first()
+    if student == None:
+        return jsonify({'error' : 'Estudiante no encontrado'})
+    post_id = request.json['post_id']
+    post = Post.query.filter_by(id=id,status='active').first()
+    if post == None:
+        return jsonify({'error' : 'La publicación a la que quieres acceder no está disponible.'})
+    post.status = 'inProcess'
+    transaction = Transaction(post=post,student=student)
+    db.session.add(transaction)
+    db.session.commit()
+    return jsonify({'message' : 'Transacción registrada satisfactoriamente.'})
+        
     
     
 
