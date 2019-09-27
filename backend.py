@@ -222,7 +222,7 @@ def get_all_posts():
     
 @app.route('/recent_posts/<student_id>')
 def get_recent_posts(student_id):
-    recent_posts = Post.query.filter(Post.student_id!=student_id,Post.status'active').order_by(desc(Post.id)).limit(50)
+    recent_posts = Post.query.filter(Post.student_id!=student_id,Post.status=='active').order_by(desc(Post.id)).limit(50)
     if recent_posts == None:
         return jsonify({'error' : 'No hay publicaciones registrados.'})
     else:
