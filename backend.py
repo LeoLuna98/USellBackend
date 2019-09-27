@@ -117,6 +117,7 @@ class PostSchema(ma.ModelSchema):
         model = Post
     careers = ma.Nested(CarrerSchema, many=True)
     category = ma.Nested(CategorySchema)
+    student = ma.Nested(StudentSchema)
     @post_dump
     def exclude_fields(self, data, **kwargs):
         for career in data['careers']:
@@ -302,6 +303,17 @@ def publish():
         return jsonify({'error' : 'Error de integridad.'}) 
     except Exception as e:
         return jsonify({'error' : f'Error al realizar la publicación. {e}'})
+
+# @app.route('/create_transaction', methods=['POST'])
+# def create_transaction():
+#     student_id = request.json['student_id']
+#     student = Student.query.filter_by(id=student_id).first()
+#     if student == None:
+#         return jsonify({'error' : 'Estudiante no encontrado'})
+    
+    
+
+
 
 @app.route('/create_carrers')
 def create_careers():
