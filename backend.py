@@ -310,7 +310,7 @@ def create_transaction():
     student = Student.query.filter_by(id=student_id).first()
     if student == None:
         return jsonify({'error' : 'Estudiante no encontrado'})
-    post_id = request.json['post_id']
+    id = request.json['id']
     post = Post.query.filter_by(id=id,status='active').first()
     if post == None:
         return jsonify({'error' : 'La publicación a la que quieres acceder no está disponible.'})
