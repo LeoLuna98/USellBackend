@@ -205,11 +205,12 @@ def get_all_students():
 
 @app.route('/single_post/<id>')
 def get_post_by(id):
-    post = Post.query.filter_by(id=id,status='active').first()
-    if post == None:
-        return jsonify({'error' : 'La publicación a la que quieres acceder no está disponible.'})
-    else:
-        return jsonify(post_schema.dump(post))
+    return jsonify({'id': id})
+    # post = Post.query.filter_by(id=id,status='active').first()
+    # if post == None:
+    #     return jsonify({'error' : 'La publicación a la que quieres acceder no está disponible.'})
+    # else:
+    #     return jsonify(post_schema.dump(post))
 
 @app.route('/all_posts')
 def get_all_posts():
