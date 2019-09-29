@@ -191,10 +191,7 @@ def get_all_careers():
 @app.route('/all_categories')
 def get_all_categories():
     all_categories = Category.query.all()
-    if all_categories == None:
-        return jsonify({'error' : 'No hay categorias registradas.'})
-    else:
-        return jsonify(categories_schema.dump(all_categories))
+    return jsonify(categories_schema.dump(all_categories))
 
 @app.route('/all_students')
 def get_all_students():
@@ -318,7 +315,7 @@ def create_transaction():
     transaction = Transaction(post=post,student=student)
     db.session.add(transaction)
     db.session.commit()
-    return jsonify({'message' : 'Transacción registrada satisfactoriamente.'})
+    return jsonify({'message' : '¡Felicitaciones!&sepEl artículo ha sido comprado con éxito. Ahora debes ponerte en contacto con el vendedor para que puedan acordar el lugar y la fecha de entrega. No olvides que puedes encontrar esta compra en tu historial para consultar los datos del vendedor y poder calificar la compra.'})
 
 @app.route('/create_carreers')
 def create_careers():
