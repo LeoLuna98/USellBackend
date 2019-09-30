@@ -232,7 +232,7 @@ def get_all_posts_by_category(category_id):
     if category == None:
         return jsonify({'error' : 'La categoría no existe.'})
     posts = Post.query.filter_by(category=category).all()
-    return jsonify({'posts' : posts_schema.dump(posts)})
+    return jsonify(posts_schema.dump(posts))
     
 @app.route('/recent_posts/<student_id>')
 def get_recent_posts(student_id):
