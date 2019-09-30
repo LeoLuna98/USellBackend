@@ -225,6 +225,14 @@ def get_all_posts():
         return jsonify({'error' : 'No hay publicaciones registrados.'})
     else:
         return jsonify({'posts' : posts_schema.dump(all_posts)})
+
+@app.route('/all_posts_by_category/<category_id>')
+def get_all_posts_by_category(category_id):
+    category = Category.query.filter_by(id=category_id).first()
+    if category == None:
+        return jsonify({'error' : 'La categoría no existe.'})
+    posts = Post.query.filter_by(category=category).all()
+    return jsonify({'posts' : posts_schema.dump(posts)})
     
 @app.route('/recent_posts/<student_id>')
 def get_recent_posts(student_id):
