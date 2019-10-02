@@ -226,12 +226,12 @@ def get_all_posts():
     else:
         return jsonify({'posts' : posts_schema.dump(all_posts)})
 
-@app.route('/all_posts_by_category/<category_id>')
-def get_all_posts_by_category(category_id):
+@app.route('/all_posts_by_category/<category_id>/<student_id>')
+def get_all_posts_by_category(category_id,student_id):
     category = Category.query.filter_by(id=category_id).first()
     if category == None:
         return jsonify({'error' : 'La categoría no existe.'})
-    posts = Post.query.filter(Post.category==category,Post.status=='active').order_by(desc(Post.id))
+    posts = Post.query.filter(Post.category==category,Post.status=='active',Post.student_id!=student_id).order_by(desc(Post.id))
     # Post.query.filter_by(category=category).all()
     return jsonify(posts_schema.dump(posts))
     
