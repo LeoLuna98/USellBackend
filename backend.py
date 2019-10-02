@@ -201,14 +201,6 @@ def get_all_students():
     else:
         return jsonify(students_schema.dump(all_students))
 
-# @app.route('/single_post/<id>')
-# def get_post_by(id):
-#     return jsonify({'id': id})
-    # post = Post.query.filter_by(id=id,status='active').first()
-    # if post == None:
-    #     return jsonify({'error' : 'La publicación a la que quieres acceder no está disponible.'})
-    # else:
-    #     return jsonify(post_schema.dump(post))
 @app.route('/single_post/<id>')
 def get_sinlge_post(id):
     post = Post.query.filter_by(id=id,status='active').first()
@@ -216,7 +208,6 @@ def get_sinlge_post(id):
         return jsonify({'error' : 'La publicación a la que quieres acceder no está disponible.'})
     else:
         return jsonify(post_schema.dump(post))
-
 
 @app.route('/all_posts')
 def get_all_posts():
@@ -242,6 +233,13 @@ def get_recent_posts(student_id):
         return jsonify({'error' : 'No hay publicaciones registrados.'})
     else:
         return jsonify(posts_schema.dump(recent_posts))
+
+@app.route('/search_posts', methods=['POST'])
+def search_posts():
+    phrase = request.json['phrase']
+    student_id = request.json['student_id']
+    posts = Post.query.filter(Post.student_id!=student_id,Post.name.ilike(f'%{phrase}%')).order_by(desc(Post.id))
+    return jsonify(posts_schema.dump(posts))
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -271,38 +269,6 @@ def register():
             return jsonify({'error' : 'Usuario ya registrado.'}) 
         except Exception as e:
             return jsonify({'error' : f'Error al regisrar usuario. {e}'})
-
-@app.route('/search_posts', methods=['POST'])
-def search_posts():
-    phrase = request.json['phrase']
-    posts = Post.query.filter(Post.name.ilike(f'%{phrase}%'))
-    return jsonify(posts_schema.dump(posts))
-    # career_name = request.json['career_name']
-    # career = Career.query.filter_by(career_name=career_name).first()
-
-    # if career == None:
-    #     return jsonify({'error' : 'Carrera no encontrada.'}) 
-    # else:
-    #     try:
-    #         id = request.json['id']
-    #         email = request.json['email']
-    #         name = request.json['name']
-    #         level = request.json['level']
-    #         phone_number = request.json['phone_number']
-    #         career_name = request.json['career_name']
-    #         if 'profile_image_url' not in request.get_json():
-    #             profile_image_url = None
-    #         else:
-    #             profile_image_url = request.json['profile_image_url']
-    #         career = Career.query.filter_by(career_name=career_name).first()
-    #         student = Student(id=id,email=email,name=name,level=level,phone_number=phone_number,career=career, profile_image_url=profile_image_url)
-    #         db.session.add(student)
-    #         db.session.commit()
-    #         return jsonify({'message' : 'Usuario registrado satisfactoriamente.'})
-    #     except exc.IntegrityError as e:
-    #         return jsonify({'error' : 'Usuario ya registrado.'}) 
-    #     except Exception as e:
-    #         return jsonify({'error' : f'Error al regisrar usuario. {e}'})
 
 @app.route('/publish', methods=['POST'])
 def publish():   
