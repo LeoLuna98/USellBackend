@@ -231,7 +231,7 @@ def get_all_posts_by_category(category_id):
     category = Category.query.filter_by(id=category_id).first()
     if category == None:
         return jsonify({'error' : 'La categoría no existe.'})
-    posts = Post.query.filter(Post.category==category).order_by(desc(Post.id))
+    posts = Post.query.filter(Post.category==category,Post.status=='active').order_by(desc(Post.id))
     # Post.query.filter_by(category=category).all()
     return jsonify(posts_schema.dump(posts))
     
