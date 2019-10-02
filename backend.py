@@ -238,7 +238,7 @@ def get_recent_posts(student_id):
 def search_posts():
     phrase = request.json['phrase']
     student_id = request.json['student_id']
-    posts = Post.query.filter(Post.student_id!=student_id,Post.name.ilike(f'%{phrase}%')).order_by(desc(Post.id))
+    posts = Post.query.filter(Post.status=='active',Post.student_id!=student_id,Post.name.ilike(f'%{phrase}%')).order_by(desc(Post.id))
     return jsonify(posts_schema.dump(posts))
 
 @app.route('/register', methods=['POST'])
