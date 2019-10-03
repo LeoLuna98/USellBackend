@@ -63,8 +63,6 @@ class Post(db.Model):
     student = db.relationship('Student', backref='post')
 
     careers = db.relationship('Career', secondary=careers, backref='post')
-    # career_id = db.Column(db.Integer, db.ForeignKey('career.id'), nullable=False)
-    # career = db.relationship('Carrer', backref='post')
 
 class WishPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -223,7 +221,6 @@ def get_all_posts_by_category(category_id,student_id):
     if category == None:
         return jsonify({'error' : 'La categoría no existe.'})
     posts = Post.query.filter(Post.category==category,Post.status=='active',Post.student_id!=student_id).order_by(desc(Post.id))
-    # Post.query.filter_by(category=category).all()
     return jsonify(posts_schema.dump(posts))
     
 @app.route('/recent_posts/<student_id>')
@@ -233,6 +230,13 @@ def get_recent_posts(student_id):
         return jsonify({'error' : 'No hay publicaciones registrados.'})
     else:
         return jsonify(posts_schema.dump(recent_posts))
+
+@app.route('/sugested_posts/<student_id>')
+def sugested_posts(student_id):
+    student = Student.query.filter_by(id=student_id).first()
+    career_id = student.career.id
+    sugested_posts = Post.query.filter(Post.student_id!=student_id,Post.status=='active',Post.level==student.level,Post.careers.any(id=career_id)).order_by(desc(Post.id)).limit(20)
+    return jsonify(posts_schema.dump(sugested_posts))
 
 @app.route('/search_posts', methods=['POST'])
 def search_posts():
