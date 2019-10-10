@@ -312,6 +312,46 @@ def publish():
     except Exception as e:
         return jsonify({'error' : f'Error al realizar la publicación. {e}'})
 
+@app.route('/edit_post', methods=['PUT'])
+def edit_post():
+    post_id = request.json['post_id']
+    post = Post.query.filter_by(id=post_id,status='active').first()
+    if post == None:
+        return jsonify({'error' : 'La publicación a la que quieres acceder no está disponible.'}) 
+
+    category_name = request.json['category_name']
+    category = Category.query.filter_by(name=category_name).first()
+    if category == None:
+        return jsonify({'error' : 'Categoría no encontrada.'})
+
+    career_names = request.json['career_names']
+    careers = []
+    for career_name in career_names:
+        career = Career.query.filter_by(career_name=career_name).first()
+        if career == None:
+            return jsonify({'error' : 'Carrera no encontrada.'})
+        else:
+            careers.append(career)
+    
+    try:
+        name = request.json['name']
+        price = request.json['price']
+        description = request.json['description']
+        image_url = request.json['image_url']
+        level = request.json['level']
+        post.name = name
+        post.price = price
+        post.description = description
+        post.image_url = image_url
+        post.level = level
+        post.category = category
+        db.session.commit()
+        return jsonify({'message' : 'Publicación actualizada satisfactoriamente.'})
+    except exc.IntegrityError as e:
+        return jsonify({'error' : 'Error de integridad.'}) 
+    except Exception as e:
+        return jsonify({'error' : f'Error al actualizar la publicación. {e}'})    
+
 @app.route('/create_transaction', methods=['POST'])
 def create_transaction():
     student_id = request.json['student_id']
