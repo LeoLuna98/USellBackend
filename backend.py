@@ -340,6 +340,7 @@ def edit_post():
         image_url = request.json['image_url']
         level = request.json['level']
         post.name = name
+        post.careers.extend(careers)
         post.price = price
         post.description = description
         post.image_url = image_url
