@@ -165,7 +165,7 @@ def get_student(id):
 
 @app.route('/active_posts/<student_id>')
 def get_active_posts(student_id):
-    posts = Post.query.filter_by(student_id=student_id,status='active').all()
+    posts = Post.query.filter_by(student_id=student_id,status='active').order_by(desc(Post.id)).all()
     return jsonify(posts_schema.dump(posts))
 
 @app.route('/delete_student/<id>')
