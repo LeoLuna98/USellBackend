@@ -274,6 +274,33 @@ def register():
         except Exception as e:
             return jsonify({'error' : f'Error al regisrar usuario. {e}'})
 
+@app.route('/edit_student/<id>', methods=['PUT'])
+def edit_student(id):
+    student = Student.query.filter_by(id=id).first()
+    if student == None:
+        return jsonify({'error' : 'Usuario no encontrado.'})
+    else:
+        career_name = request.json['career_name']
+        career = Career.query.filter_by(career_name=career_name).first()
+
+        if career == None:
+            return jsonify({'error' : 'Carrera no encontrada.'})
+        else
+            name = request.json['name']
+            level = request.json['level']
+            phone_number = request.json['phone_number']
+            if 'profile_image_url' not in request.get_json():
+                profile_image_url = None
+            else:
+                profile_image_url = request.json['profile_image_url']
+            student.name = name
+            student.phone_number = phone_number
+            student.career = career
+            student.level = level
+            db.session.commit()
+            return jsonify({'message' : 'Información actualizada satisfactoriamente.'})
+        
+
 @app.route('/publish', methods=['POST'])
 def publish():   
     category_name = request.json['category_name']
