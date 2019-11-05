@@ -285,7 +285,7 @@ def edit_student(id):
 
         if career == None:
             return jsonify({'error' : 'Carrera no encontrada.'})
-        else
+        else:
             name = request.json['name']
             level = request.json['level']
             phone_number = request.json['phone_number']
@@ -297,6 +297,7 @@ def edit_student(id):
             student.phone_number = phone_number
             student.career = career
             student.level = level
+            student.profile_image_url = profile_image_url
             db.session.commit()
             return jsonify({'message' : 'Información actualizada satisfactoriamente.'})
         
