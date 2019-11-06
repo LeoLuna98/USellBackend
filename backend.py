@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from sqlalchemy import or_
 from marshmallow import post_dump
 from marshmallow_sqlalchemy import TableSchema
 from sqlalchemy import exc, desc
@@ -10,8 +11,8 @@ import os
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -133,6 +134,7 @@ class WishPostSchema(ma.ModelSchema):
 class TransactionSchema(ma.ModelSchema):
     class Meta:
         model = Transaction
+    post = ma.Nested(PostSchema)
 
 # Single Schemas Instances
 student_schema = StudentSchema()
@@ -368,6 +370,14 @@ def create_transaction():
     db.session.add(transaction)
     db.session.commit()
     return jsonify({'message' : '¡Felicitaciones!&sepEl artículo ha sido comprado con éxito. Ahora debes ponerte en contacto con el vendedor para que puedan acordar el lugar y la fecha de entrega. No olvides que puedes encontrar esta compra en tu historial para consultar los datos del vendedor y poder calificar la compra.'})
+
+@app.route('/transaction_history/<student_id>')
+def transaction_history(student_id):    
+    transactions = Transaction.query.join(Post).filter(or_(Post.student_id == student_id, Transaction.student_id == student_id)).all()
+    # (Post.student_id == student_id) | (Post.student_id == student_id)).all()
+    # | (Transaction.post.student_id == student_id)
+    # transactions = Transaction.query.filter(Transaction.post.student_id == student_id).all()
+    return jsonify(transactions_schema.dump(transactions))
 
 @app.route('/create_carreers')
 def create_careers():
