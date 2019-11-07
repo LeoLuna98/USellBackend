@@ -135,6 +135,7 @@ class TransactionSchema(ma.ModelSchema):
     class Meta:
         model = Transaction
     post = ma.Nested(PostSchema)
+    student = ma.Nested(StudentSchema)
 
 # Single Schemas Instances
 student_schema = StudentSchema()
