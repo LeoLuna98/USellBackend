@@ -402,7 +402,7 @@ def create_transaction():
 
 @app.route('/transaction_history/<student_id>')
 def transaction_history(student_id):    
-    transactions = Transaction.query.join(Post).filter(or_(Post.student_id == student_id, Transaction.student_id == student_id)).all()
+    transactions = Transaction.query.join(Post).filter(or_(Post.student_id == student_id, Transaction.student_id == student_id)).order_by(desc(Transaction.id)).all()
     # (Post.student_id == student_id) | (Post.student_id == student_id)).all()
     # | (Transaction.post.student_id == student_id)
     # transactions = Transaction.query.filter(Transaction.post.student_id == student_id).all()
