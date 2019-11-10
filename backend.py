@@ -403,10 +403,12 @@ def create_transaction():
 @app.route('/transaction_history/<student_id>')
 def transaction_history(student_id):    
     transactions = Transaction.query.join(Post).filter(or_(Post.student_id == student_id, Transaction.student_id == student_id)).order_by(desc(Transaction.id)).all()
-    # (Post.student_id == student_id) | (Post.student_id == student_id)).all()
-    # | (Transaction.post.student_id == student_id)
-    # transactions = Transaction.query.filter(Transaction.post.student_id == student_id).all()
     return jsonify(transactions_schema.dump(transactions))
+
+@app.route('/transaction/<transaction_id>')
+def get_transaction(transaction_id):    
+    transaction = Transaction.query.filter_by(id=transaction_id).first()
+    return jsonify(transaction_schema.dump(transaction))
 
 @app.route('/create_carreers')
 def create_careers():
