@@ -405,7 +405,7 @@ def transaction_history(student_id):
     transactions = Transaction.query.join(Post).filter(or_(Post.student_id == student_id, Transaction.student_id == student_id)).all()
     return jsonify(transactions_schema.dump(transactions))
 
-@app.route('/qualify_seller/<seller_id>', methods=['POST'])
+@app.route('/qualify_seller/<seller_id>', methods=['PUT'])
 def qualify_seller(seller_id):
     seller = Student.query.filter_by(id=seller_id).first()
     if seller == None:
