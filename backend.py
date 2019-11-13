@@ -135,6 +135,7 @@ class TransactionSchema(ma.ModelSchema):
     class Meta:
         model = Transaction
     post = ma.Nested(PostSchema)
+    student = ma.Nested(StudentSchema)
 
 # Single Schemas Instances
 student_schema = StudentSchema()
@@ -400,7 +401,7 @@ def create_transaction():
     return jsonify({'message' : '¡Felicitaciones!&sepEl artículo ha sido comprado con éxito. Ahora debes ponerte en contacto con el vendedor para que puedan acordar el lugar y la fecha de entrega. No olvides que puedes encontrar esta compra en tu historial para consultar los datos del vendedor y poder calificar la compra.'})
 
 @app.route('/transaction_history/<student_id>')
-def transaction_history(student_id):    
+def transaction_history(student_id):
     transactions = Transaction.query.join(Post).filter(or_(Post.student_id == student_id, Transaction.student_id == student_id)).all()
     return jsonify(transactions_schema.dump(transactions))
 
@@ -426,6 +427,13 @@ def qualify_seller(seller_id):
                 seller.seller_rating = seller_raiting
                 db.session.commit()
                 return jsonify({'message':'Calificación enviada satisfactoriamente'})
+    transactions = Transaction.query.join(Post).filter(or_(Post.student_id == student_id, Transaction.student_id == student_id)).order_by(desc(Transaction.id)).all()
+    return jsonify(transactions_schema.dump(transactions))
+
+@app.route('/transaction/<transaction_id>')
+def get_transaction(transaction_id):    
+    transaction = Transaction.query.filter_by(id=transaction_id).first()
+    return jsonify(transaction_schema.dump(transaction))
 
 @app.route('/create_carreers')
 def create_careers():
