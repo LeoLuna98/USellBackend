@@ -410,8 +410,7 @@ def qualify_seller(transaction_id):
     # seller = Student.query.filter_by(id=seller_id).first()
     # if seller == None:
     #     return jsonify({'error' : 'Estudiante no encontrado'})
-    # else:        
-    transactions_counter = Transaction.query.join(Post).filter(Post.student_id == seller_id, Transaction.purchaser_status == 'finished').count()
+    # else:
     transaction = Transaction.query.filter_by(id=transaction_id,purchaser_status='pending').first()
     if transaction == None:
         return jsonify({'error' : 'Transacción no encontrada'})
@@ -419,7 +418,8 @@ def qualify_seller(transaction_id):
         new_raiting = request.json['new_raiting']
         if new_raiting == None:
             return jsonify({'error' : 'Ingrese una calificación válida'})
-        else:                    
+        else:
+            transactions_counter = Transaction.query.join(Post).filter(Post.student_id == transaction.post.student.id, Transaction.purchaser_status == 'finished').count()
             transaction.purchaser_status = 'finished'
             seller_raiting = transaction.post.student.seller_rating # seller.seller_rating
             seller_raiting = (seller_raiting*transactions_counter + new_raiting) / (transactions_counter + 1)
