@@ -402,10 +402,30 @@ def create_transaction():
 @app.route('/transaction_history/<student_id>')
 def transaction_history(student_id):    
     transactions = Transaction.query.join(Post).filter(or_(Post.student_id == student_id, Transaction.student_id == student_id)).all()
-    # (Post.student_id == student_id) | (Post.student_id == student_id)).all()
-    # | (Transaction.post.student_id == student_id)
-    # transactions = Transaction.query.filter(Transaction.post.student_id == student_id).all()
     return jsonify(transactions_schema.dump(transactions))
+
+@app.route('/qualify_seller/<seller_id>', methods=['POST'])
+def qualify_seller(seller_id):
+    seller = Student.query.filter_by(id=seller_id).first()
+    if seller == None:
+        return jsonify({'error' : 'Estudiante no encontrado'})
+    else:        
+        transactions_counter = Transaction.query.join(Post).filter(Post.student_id == seller_id, Transaction.purchaser_status == 'finished').count()
+        transaction_id = request.json['transaction_id']
+        transaction = Transaction.query.filter_by(id=transaction_id).first()
+        if transaction == None:
+            return jsonify({'error' : 'Transacción no encontrada'})
+        else:
+            new_raiting = request.json['new_raiting']
+            if new_raiting == None:
+               return jsonify({'error' : 'Ingrese una calificación válida'})
+            else:                    
+                transaction.purchaser_status = 'finished'
+                seller_raiting = seller.seller_rating
+                seller_raiting = (seller_raiting*transactions_counter + new_raiting) / (transactions_counter + 1)
+                seller.seller_rating = seller_raiting
+                db.session.commit()
+                return jsonify({'message':'Calificación enviada satisfactoriamente'})
 
 @app.route('/create_carreers')
 def create_careers():
