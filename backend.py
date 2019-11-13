@@ -417,6 +417,8 @@ def qualify_seller(transaction_id):
         else:
             transactions_counter = Transaction.query.join(Post).filter(Post.student_id == transaction.post.student.id, Transaction.purchaser_status == 'finished').count()
             transaction.purchaser_status = 'finished'
+            if transaction.seller_status == 'finished':
+                transaction.general_status = 'finished'
             seller_raiting = transaction.post.student.seller_rating # seller.seller_rating
             seller_raiting = (seller_raiting*transactions_counter + new_raiting) / (transactions_counter + 1)
             transaction.post.student.seller_rating = seller_raiting
@@ -435,6 +437,8 @@ def qualify_purchaser(transaction_id):
         else:
             transactions_counter = Transaction.query.join(Post).filter(Transaction.student_id == transaction.student.id, Transaction.seller_status == 'finished').count()
             transaction.seller_status = 'finished'
+            if transaction.purchaser_status == 'finished':
+                transaction.general_status = 'finished'
             purchaser_raiting = transaction.student.purchaser_rating # seller.seller_rating
             purchaser_raiting = (purchaser_raiting*transactions_counter + new_raiting) / (transactions_counter + 1)
             transaction.student.purchaser_rating = purchaser_raiting
