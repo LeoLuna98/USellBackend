@@ -407,10 +407,6 @@ def transaction_history(student_id):
 
 @app.route('/qualify_seller/<transaction_id>', methods=['PUT'])
 def qualify_seller(transaction_id):
-    # seller = Student.query.filter_by(id=seller_id).first()
-    # if seller == None:
-    #     return jsonify({'error' : 'Estudiante no encontrado'})
-    # else:
     transaction = Transaction.query.filter_by(id=transaction_id,purchaser_status='pending').first()
     if transaction == None:
         return jsonify({'error' : 'Transacción no encontrada'})
@@ -424,6 +420,24 @@ def qualify_seller(transaction_id):
             seller_raiting = transaction.post.student.seller_rating # seller.seller_rating
             seller_raiting = (seller_raiting*transactions_counter + new_raiting) / (transactions_counter + 1)
             transaction.post.student.seller_rating = seller_raiting
+            db.session.commit()
+            return jsonify({'message':'Calificación enviada satisfactoriamente'})
+
+@app.route('/qualify_purchaser/<transaction_id>', methods=['PUT'])
+def qualify_purchaser(transaction_id):
+    transaction = Transaction.query.filter_by(id=transaction_id,seller_status='pending').first()
+    if transaction == None:
+        return jsonify({'error' : 'Transacción no encontrada'})
+    else:
+        new_raiting = request.json['new_raiting']
+        if new_raiting == None:
+            return jsonify({'error' : 'Ingrese una calificación válida'})
+        else:
+            transactions_counter = Transaction.query.join(Post).filter(Transaction.student_id == transaction.student.id, Transaction.seller_status == 'finished').count()
+            transaction.seller_status = 'finished'
+            purchaser_raiting = transaction.student.purchaser_rating # seller.seller_rating
+            purchaser_raiting = (purchaser_raiting*transactions_counter + new_raiting) / (transactions_counter + 1)
+            transaction.student.purchaser_rating = purchaser_raiting
             db.session.commit()
             return jsonify({'message':'Calificación enviada satisfactoriamente'})
 
