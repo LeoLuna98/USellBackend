@@ -411,7 +411,10 @@ def qualify_seller(transaction_id):
     if transaction == None:
         return jsonify({'error' : 'La transacción no está disponible para calificar'})
     else:
-        new_raiting = request.json['new_raiting']
+        if 'new_raiting' not in request.get_json():
+            new_raiting = None
+        else:
+            new_raiting = request.json['new_raiting']
         if new_raiting == None:
             if transaction.seller_status == 'finished':
                 return jsonify({'error' : 'No se puede cancelar la transacción. El vendedor indicó que ebtregó el producto'})
@@ -435,7 +438,10 @@ def qualify_purchaser(transaction_id):
     if transaction == None:
         return jsonify({'error' : 'La transacción no está disponible para calificar'})
     else:
-        new_raiting = request.json['new_raiting']
+        if 'new_raiting' not in request.get_json():
+            new_raiting = None
+        else:
+            new_raiting = request.json['new_raiting']
         if new_raiting == None:
             if transaction.purchaser_status == 'finished':
                 return jsonify({'error' : 'No se puede cancelar la transacción. El comprador indicó que recibió el producto'})
