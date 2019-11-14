@@ -407,7 +407,7 @@ def transaction_history(student_id):
 
 @app.route('/qualify_seller/<transaction_id>', methods=['PUT'])
 def qualify_seller(transaction_id):
-    transaction = Transaction.query.filter_by(id=transaction_id,purchaser_status='pending').first()
+    transaction = Transaction.query.filter_by(id=transaction_id,purchaser_status='pending',general_status='pending').first()
     if transaction == None:
         return jsonify({'error' : 'La transacción no está disponible para calificar'})
     else:
@@ -435,7 +435,7 @@ def qualify_seller(transaction_id):
 
 @app.route('/qualify_purchaser/<transaction_id>', methods=['PUT'])
 def qualify_purchaser(transaction_id):
-    transaction = Transaction.query.filter_by(id=transaction_id,seller_status='pending').first()
+    transaction = Transaction.query.filter_by(id=transaction_id,seller_status='pending',general_status='pending').first()
     if transaction == None:
         return jsonify({'error' : 'La transacción no está disponible para calificar'})
     else:
