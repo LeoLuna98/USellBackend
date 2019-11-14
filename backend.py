@@ -409,11 +409,15 @@ def transaction_history(student_id):
 def qualify_seller(transaction_id):
     transaction = Transaction.query.filter_by(id=transaction_id,purchaser_status='pending').first()
     if transaction == None:
-        return jsonify({'error' : 'Transacción no encontrada'})
+        return jsonify({'error' : 'La transacción no está disponible para calificar'})
     else:
         new_raiting = request.json['new_raiting']
         if new_raiting == None:
-            return jsonify({'error' : 'Ingrese una calificación válida'})
+            if transaction.seller_status == 'finished':
+                return jsonify({'error' : 'No se puede cancelar la transacción. El vendedor indicó que ebtregó el producto'})
+            transaction.general_status = 'cancelled'
+            transaction.purchaser_status = 'cancelled'
+            return jsonify({'message' : 'Compra cancelada satisfactoriamente'})
         else:
             transactions_counter = Transaction.query.join(Post).filter(Post.student_id == transaction.post.student.id, Transaction.purchaser_status == 'finished').count()
             transaction.purchaser_status = 'finished'
@@ -429,11 +433,15 @@ def qualify_seller(transaction_id):
 def qualify_purchaser(transaction_id):
     transaction = Transaction.query.filter_by(id=transaction_id,seller_status='pending').first()
     if transaction == None:
-        return jsonify({'error' : 'Transacción no encontrada'})
+        return jsonify({'error' : 'La transacción no está disponible para calificar'})
     else:
         new_raiting = request.json['new_raiting']
         if new_raiting == None:
-            return jsonify({'error' : 'Ingrese una calificación válida'})
+            if transaction.purchaser_status == 'finished':
+                return jsonify({'error' : 'No se puede cancelar la transacción. El comprador indicó que recibió el producto'})
+            transaction.general_status = 'cancelled'
+            transaction.seller_status = 'cancelled'
+            return jsonify({'message' : 'Venta cancelada satisfactoriamente'})
         else:
             transactions_counter = Transaction.query.join(Post).filter(Transaction.student_id == transaction.student.id, Transaction.seller_status == 'finished').count()
             transaction.seller_status = 'finished'
