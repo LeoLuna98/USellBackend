@@ -420,6 +420,7 @@ def qualify_seller(transaction_id):
                 return jsonify({'error' : 'No se puede cancelar la transacción. El vendedor indicó que ebtregó el producto'})
             transaction.general_status = 'cancelled'
             transaction.purchaser_status = 'cancelled'
+            db.session.commit()
             return jsonify({'message' : 'Compra cancelada satisfactoriamente'})
         else:
             transactions_counter = Transaction.query.join(Post).filter(Post.student_id == transaction.post.student.id, Transaction.purchaser_status == 'finished').count()
@@ -447,6 +448,7 @@ def qualify_purchaser(transaction_id):
                 return jsonify({'error' : 'No se puede cancelar la transacción. El comprador indicó que recibió el producto'})
             transaction.general_status = 'cancelled'
             transaction.seller_status = 'cancelled'
+            db.session.commit()
             return jsonify({'message' : 'Venta cancelada satisfactoriamente'})
         else:
             transactions_counter = Transaction.query.join(Post).filter(Transaction.student_id == transaction.student.id, Transaction.seller_status == 'finished').count()
