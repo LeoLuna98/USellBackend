@@ -466,6 +466,38 @@ def get_transaction(transaction_id):
     transaction = Transaction.query.filter_by(id=transaction_id).first()
     return jsonify(transaction_schema.dump(transaction))
 
+@app.route('/add_wishlist/<student_id>', methods=['POST'])
+def add_wishlist(student_id):
+    student = Student.query.filter_by(id=student_id).first()
+    if student == None:
+        return jsonify({'error' : 'Estudiante no encontrado'})
+
+    postId = request.json['PostId']
+    post = Post.query.filter_by(id=postId,status='active').first()
+    if post == None:
+        return jsonify({'error' : 'La publicación no está disponible'})
+    
+
+    
+    transaction = Transaction.query.filter_by(id=transaction_id).first()
+    return jsonify(transaction_schema.dump(transaction))
+
+# @app.route('/create_transaction', methods=['POST'])
+# def create_transaction():
+#     student_id = request.json['student_id']
+#     student = Student.query.filter_by(id=student_id).first()
+#     if student == None:
+#         return jsonify({'error' : 'Estudiante no encontrado'})
+#     id = request.json['id']
+#     post = Post.query.filter_by(id=id,status='active').first()
+#     if post == None:
+#         return jsonify({'error' : 'La publicación a la que quieres acceder no está disponible.'})
+#     post.status = 'inProcess'
+#     transaction = Transaction(post=post,student=student)
+#     db.session.add(transaction)
+#     db.session.commit()
+#     return jsonify({'message' : '¡Felicitaciones!&sepEl artículo ha sido comprado con éxito. Ahora debes ponerte en contacto con el vendedor para que puedan acordar el lugar y la fecha de entrega. No olvides que puedes encontrar esta compra en tu historial para consultar los datos del vendedor y poder calificar la compra.'})
+
 @app.route('/create_carreers')
 def create_careers():
     car1 = Career(career_name='Administración')
