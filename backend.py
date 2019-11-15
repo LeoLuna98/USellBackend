@@ -11,8 +11,8 @@ import os
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -466,8 +466,8 @@ def get_transaction(transaction_id):
     transaction = Transaction.query.filter_by(id=transaction_id).first()
     return jsonify(transaction_schema.dump(transaction))
 
-@app.route('/add_wishlist/<student_id>', methods=['POST'])
-def add_wishlist(student_id):
+@app.route('/add_to_wishlist/<student_id>', methods=['POST'])
+def add_to_wishlist(student_id):
     student = Student.query.filter_by(id=student_id).first()
     if student == None:
         return jsonify({'error' : 'Estudiante no encontrado'})
@@ -477,26 +477,13 @@ def add_wishlist(student_id):
     if post == None:
         return jsonify({'error' : 'La publicación no está disponible'})
     
-
-    
-    transaction = Transaction.query.filter_by(id=transaction_id).first()
-    return jsonify(transaction_schema.dump(transaction))
-
-# @app.route('/create_transaction', methods=['POST'])
-# def create_transaction():
-#     student_id = request.json['student_id']
-#     student = Student.query.filter_by(id=student_id).first()
-#     if student == None:
-#         return jsonify({'error' : 'Estudiante no encontrado'})
-#     id = request.json['id']
-#     post = Post.query.filter_by(id=id,status='active').first()
-#     if post == None:
-#         return jsonify({'error' : 'La publicación a la que quieres acceder no está disponible.'})
-#     post.status = 'inProcess'
-#     transaction = Transaction(post=post,student=student)
-#     db.session.add(transaction)
-#     db.session.commit()
-#     return jsonify({'message' : '¡Felicitaciones!&sepEl artículo ha sido comprado con éxito. Ahora debes ponerte en contacto con el vendedor para que puedan acordar el lugar y la fecha de entrega. No olvides que puedes encontrar esta compra en tu historial para consultar los datos del vendedor y poder calificar la compra.'})
+    if WishPost.query.filter_by(post=post).count() != 0:
+        return jsonify({'error' : 'La publicación ya está en su lista de deseados'})
+        
+    wishPost = WishPost(post=post,student=student)
+    db.session.add(wishPost)
+    db.session.commit()
+    return jsonify({'message':'Producto agregado a la lista de deseados'})
 
 @app.route('/create_carreers')
 def create_careers():
