@@ -111,10 +111,20 @@ class StudentSchema(ma.ModelSchema):
         data.pop('wishPost')
         return data
 
+class WishPostHelperSchema(ma.ModelSchema):
+    class Meta:
+        model = WishPost
+    @post_dump
+    def exclude_fields(self, data, **kwargs):
+        data.pop('added_date')
+        data.pop('post')
+        return data
+
 class PostSchema(ma.ModelSchema):
     class Meta:
         model = Post
     careers = ma.Nested(CarrerSchema, many=True)
+    wishPost = ma.Nested(WishPostHelperSchema, many=True)
     category = ma.Nested(CategorySchema)
     student = ma.Nested(StudentSchema)
     @post_dump
@@ -122,14 +132,14 @@ class PostSchema(ma.ModelSchema):
         for career in data['careers']:
             career.pop('post')
             career.pop('student')
-        # data['category'].pop('post')
         data.pop('transaction')
-        data.pop('wishPost')
         return data
 
 class WishPostSchema(ma.ModelSchema):
     class Meta:
         model = WishPost
+    post = ma.Nested(PostSchema)
+    student = ma.Nested(StudentSchema)
 
 class TransactionSchema(ma.ModelSchema):
     class Meta:
@@ -477,13 +487,18 @@ def add_to_wishlist(student_id):
     if post == None:
         return jsonify({'error' : 'La publicación no está disponible'})
     
-    if WishPost.query.filter_by(post=post).count() != 0:
+    if WishPost.query.filter_by(post=post,student_id=student_id).count() != 0:
         return jsonify({'error' : 'La publicación ya está en su lista de deseados'})
         
     wishPost = WishPost(post=post,student=student)
     db.session.add(wishPost)
     db.session.commit()
     return jsonify({'message':'Producto agregado a la lista de deseados'})
+
+@app.route('/wishlist/<student_id>')
+def get_wishlist(student_id):    
+    wishlist = WishPost.query.filter_by(student_id=student_id).all()
+    return jsonify(wish_posts_schema.dump(wishlist))
 
 @app.route('/create_carreers')
 def create_careers():
