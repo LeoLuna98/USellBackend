@@ -488,7 +488,7 @@ def add_to_wishlist(student_id):
         return jsonify({'error' : 'La publicación no está disponible'})
     
     if WishPost.query.filter_by(post=post,student_id=student_id).count() != 0:
-        return jsonify({'error' : 'La publicación ya está en su lista de deseados'})
+        return jsonify({'message' : 'La publicación ya está en su lista de deseados'})
         
     wishPost = WishPost(post=post,student=student)
     db.session.add(wishPost)
