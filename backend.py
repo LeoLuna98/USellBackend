@@ -495,7 +495,7 @@ def add_to_wishlist(student_id):
     wishPost = WishPost(post=post,student=student)
     db.session.add(wishPost)
     db.session.commit()
-    return jsonify({'message':'La publicación se agregó a la lista de deseados'})
+    return jsonify({'message':'La publicación se agregó a su lista de deseados'})
 
 @app.route('/wishlist/<student_id>')
 def get_wishlist(student_id):
