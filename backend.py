@@ -502,6 +502,13 @@ def get_wishlist(student_id):
     wishlist = WishPost.query.join(Post).filter(WishPost.student_id == student_id, Post.status == 'active').order_by(desc(WishPost.id)).all()
     return jsonify(wish_posts_schema.dump(wishlist))
 
+@app.route('/remove_wishpost/<student_id>', methods=['DELETE'])
+def remove_wishpost(student_id):
+    wishpost_id = request.json['wishpost_id']
+    wishpost = WishPost.query.filter_by(id=wishpost_id,student_id=student_id).delete()
+    db.session.commit()
+    return jsonify({'La publicación se eliminó de su lista de deseados'})
+
 @app.route('/create_carreers')
 def create_careers():
     car1 = Career(career_name='Administración')
