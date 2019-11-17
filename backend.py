@@ -498,8 +498,8 @@ def add_to_wishlist(student_id):
     return jsonify({'message':'La publicación se agregó a la lista de deseados'})
 
 @app.route('/wishlist/<student_id>')
-def get_wishlist(student_id):    
-    wishlist = WishPost.query.filter_by(student_id=student_id).all()
+def get_wishlist(student_id):
+    wishlist = WishPost.query.join(Post).filter(WishPost.student_id == student_id, Post.status == 'active').order_by(desc(WishPost.id)).all()
     return jsonify(wish_posts_schema.dump(wishlist))
 
 @app.route('/create_carreers')
