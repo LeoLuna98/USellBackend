@@ -482,7 +482,7 @@ def add_to_wishlist(student_id):
     if student == None:
         return jsonify({'error' : 'Estudiante no encontrado'})
 
-    postId = request.json['PostId']
+    postId = request.json['postId']
     post = Post.query.filter_by(id=postId,status='active').first()
     if post == None:
         return jsonify({'error' : 'La publicación no está disponible'})
