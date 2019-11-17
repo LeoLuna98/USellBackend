@@ -489,6 +489,7 @@ def add_to_wishlist(student_id):
     
     if WishPost.query.filter_by(post=post,student_id=student_id).count() != 0:
         WishPost.query.filter_by(post=post,student_id=student_id).delete()
+        db.session.commit()
         return jsonify({'message' : 'La publicación se eliminó de su lista de deseados'})
         
     wishPost = WishPost(post=post,student=student)
