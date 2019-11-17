@@ -488,12 +488,13 @@ def add_to_wishlist(student_id):
         return jsonify({'error' : 'La publicación no está disponible'})
     
     if WishPost.query.filter_by(post=post,student_id=student_id).count() != 0:
-        return jsonify({'message' : 'La publicación ya está en su lista de deseados'})
+        WishPost.query.filter_by(post=post,student_id=student_id).delete()
+        return jsonify({'message' : 'La publicación se eliminó de su lista de deseados'})
         
     wishPost = WishPost(post=post,student=student)
     db.session.add(wishPost)
     db.session.commit()
-    return jsonify({'message':'Producto agregado a la lista de deseados'})
+    return jsonify({'message':'La publicación se agregó a la lista de deseados'})
 
 @app.route('/wishlist/<student_id>')
 def get_wishlist(student_id):    
