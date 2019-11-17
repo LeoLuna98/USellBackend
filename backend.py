@@ -507,7 +507,7 @@ def remove_wishpost(student_id):
     wishpost_id = request.json['wishpost_id']
     wishpost = WishPost.query.filter_by(id=wishpost_id,student_id=student_id).delete()
     db.session.commit()
-    return jsonify({'La publicación se eliminó de su lista de deseados'})
+    return jsonify({'message':'La publicación se eliminó de su lista de deseados'})
 
 @app.route('/create_carreers')
 def create_careers():
