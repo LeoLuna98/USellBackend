@@ -166,7 +166,7 @@ transactions_schema = TransactionSchema(many=True)
 
 @app.route('/')
 def index():
-    return jsonify({'message' : 'app running'})
+    return jsonify({'message' : 'profe ponganos 20'})
 
 @app.route('/student/<id>')
 def get_student(id):
